@@ -1,11 +1,22 @@
 syntax = "proto3";
 
-import "google/protobuf/empty.proto";
-
 package net.vseinstrumenti.git.fd.proto.cashdesk;
 
 option go_package = "git.vseinstrumenti.net/fd/proto/grpc/cashdesk/go/cashdeskpb";
 
 service Cashdesk {
-  rpc GetData(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  rpc StreamWorkstationEvents(StreamWorkstationEventsRequest) returns (stream StreamWorkstationEventsResponse) {}
+}
+
+message StreamWorkstationEventsRequest {
+  string workstation_id = 1;
+}
+
+message StreamWorkstationEventsResponse {
+  enum EVENT_TYPE{
+    PURCHASE = 0;
+    CLOSE_SHIFT = 1;
+  }
+
+  EVENT_TYPE event_type = 1;
 }

@@ -11,7 +11,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -23,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CashdeskClient interface {
-	GetData(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	StreamWorkstationEvents(ctx context.Context, in *StreamWorkstationEventsRequest, opts ...grpc.CallOption) (Cashdesk_StreamWorkstationEventsClient, error)
 }
 
 type cashdeskClient struct {
@@ -34,20 +33,43 @@ func NewCashdeskClient(cc grpc.ClientConnInterface) CashdeskClient {
 	return &cashdeskClient{cc}
 }
 
-func (c *cashdeskClient) GetData(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/net.vseinstrumenti.git.fd.proto.cashdesk.Cashdesk/GetData", in, out, opts...)
+func (c *cashdeskClient) StreamWorkstationEvents(ctx context.Context, in *StreamWorkstationEventsRequest, opts ...grpc.CallOption) (Cashdesk_StreamWorkstationEventsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &Cashdesk_ServiceDesc.Streams[0], "/net.vseinstrumenti.git.fd.proto.cashdesk.Cashdesk/StreamWorkstationEvents", opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &cashdeskStreamWorkstationEventsClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type Cashdesk_StreamWorkstationEventsClient interface {
+	Recv() (*StreamWorkstationEventsResponse, error)
+	grpc.ClientStream
+}
+
+type cashdeskStreamWorkstationEventsClient struct {
+	grpc.ClientStream
+}
+
+func (x *cashdeskStreamWorkstationEventsClient) Recv() (*StreamWorkstationEventsResponse, error) {
+	m := new(StreamWorkstationEventsResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 // CashdeskServer is the server API for Cashdesk service.
 // All implementations must embed UnimplementedCashdeskServer
 // for forward compatibility
 type CashdeskServer interface {
-	GetData(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	StreamWorkstationEvents(*StreamWorkstationEventsRequest, Cashdesk_StreamWorkstationEventsServer) error
 	mustEmbedUnimplementedCashdeskServer()
 }
 
@@ -55,8 +77,8 @@ type CashdeskServer interface {
 type UnimplementedCashdeskServer struct {
 }
 
-func (UnimplementedCashdeskServer) GetData(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetData not implemented")
+func (UnimplementedCashdeskServer) StreamWorkstationEvents(*StreamWorkstationEventsRequest, Cashdesk_StreamWorkstationEventsServer) error {
+	return status.Errorf(codes.Unimplemented, "method StreamWorkstationEvents not implemented")
 }
 func (UnimplementedCashdeskServer) mustEmbedUnimplementedCashdeskServer() {}
 
@@ -71,22 +93,25 @@ func RegisterCashdeskServer(s grpc.ServiceRegistrar, srv CashdeskServer) {
 	s.RegisterService(&Cashdesk_ServiceDesc, srv)
 }
 
-func _Cashdesk_GetData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
+func _Cashdesk_StreamWorkstationEvents_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(StreamWorkstationEventsRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
 	}
-	if interceptor == nil {
-		return srv.(CashdeskServer).GetData(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/net.vseinstrumenti.git.fd.proto.cashdesk.Cashdesk/GetData",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CashdeskServer).GetData(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
+	return srv.(CashdeskServer).StreamWorkstationEvents(m, &cashdeskStreamWorkstationEventsServer{stream})
+}
+
+type Cashdesk_StreamWorkstationEventsServer interface {
+	Send(*StreamWorkstationEventsResponse) error
+	grpc.ServerStream
+}
+
+type cashdeskStreamWorkstationEventsServer struct {
+	grpc.ServerStream
+}
+
+func (x *cashdeskStreamWorkstationEventsServer) Send(m *StreamWorkstationEventsResponse) error {
+	return x.ServerStream.SendMsg(m)
 }
 
 // Cashdesk_ServiceDesc is the grpc.ServiceDesc for Cashdesk service.
@@ -95,12 +120,13 @@ func _Cashdesk_GetData_Handler(srv interface{}, ctx context.Context, dec func(in
 var Cashdesk_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "net.vseinstrumenti.git.fd.proto.cashdesk.Cashdesk",
 	HandlerType: (*CashdeskServer)(nil),
-	Methods: []grpc.MethodDesc{
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
 		{
-			MethodName: "GetData",
-			Handler:    _Cashdesk_GetData_Handler,
+			StreamName:    "StreamWorkstationEvents",
+			Handler:       _Cashdesk_StreamWorkstationEvents_Handler,
+			ServerStreams: true,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
 	Metadata: "grpc/cashdesk/cashdesk.proto",
 }
