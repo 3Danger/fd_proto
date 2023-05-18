@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package net.vseinstrumenti.git.fd.proto.cashdesk;
+
+option go_package = "git.vseinstrumenti.net/fd/proto/grpc/cashdesk/go/cashdeskpb";
+
+service Cashdesk {
+  rpc GetData(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+}
