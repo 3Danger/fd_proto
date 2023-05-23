@@ -28,52 +28,47 @@ message StreamWorkstationEventsResponse {
 
   EVENT_TITLE event_title = 1;
 
-  // maybe place cashier name here
-
   optional Purchase purchase            = 2;
   optional Refund refund                = 3;
   optional CloseShift close_shift       = 4;
   optional Report report                = 5;
   optional CashIncome cash_in           = 6;
   optional CashOutcome cash_outcome     = 7;
-  optional ContinuePrint continue_print = 8; // what is it
-  optional CancelCheck cancel_check     = 9; // what is it
 }
 
 message Purchase {
-  string cashier_name = 1;
-  string order = 2;
-  repeated PurchaseGood goods = 3;
-  repeated PurchasePayment payments = 4;
+  string cashier_name                  = 1;
+  string order                         = 2;
+  repeated PurchaseGood goods          = 3;
+  repeated PurchasePayment payments    = 4;
   map<string,google.protobuf.Any> tags = 5;
 }
 
 message PurchasePayment {
   string payment_type = 1;
-  double amount = 2;
-  // string rrn = 3;
+  double amount       = 2;
+  optional string rrn = 3;
 }
 
 message PurchaseGood {
-  string name = 1;
-  double quantity = 2;
-  double price = 3;
-  int32 department = 4;
-  string tax_type = 5;
+  string name                          = 1;
+  double quantity                      = 2;
+  double price                         = 3;
+  int32 department                     = 4;
+  string tax_type                      = 5;
   map<string,google.protobuf.Any> tags = 6;
-  // map<string,google.protobuf.Any> mark = 7;
 }
 
 message Refund {
-  string cashier_name = 1;
-  string order = 2;
-  repeated PurchaseGood goods = 3;
-  repeated PurchasePayment payments = 4;
+  string cashier_name                  = 1;
+  string order                         = 2;
+  repeated PurchaseGood goods          = 3;
+  repeated PurchasePayment payments    = 4;
   map<string,google.protobuf.Any> tags = 5;
 }
 
 message CloseShift {
-  string cashier_name = 1;
+  string cashier_name         = 1;
   optional string device_type = 2;
 }
 
@@ -87,20 +82,16 @@ message Report {
     LAST_DOCUMENT      = 5;
   }
 
-  string cashier_name = 1;
+  string cashier_name        = 1;
   repeated REPORT_TYPE types = 2;
 }
 
 message CashIncome {
   string cashier_name = 1;
-  double sum = 2;
+  double sum          = 2;
 }
 
 message CashOutcome {
   string cashier_name = 1;
-  double sum = 2;
+  double sum          = 2;
 }
-
-message ContinuePrint {}
-
-message CancelCheck {}
