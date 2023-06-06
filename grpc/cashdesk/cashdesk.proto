@@ -8,6 +8,18 @@ option go_package = "git.vseinstrumenti.net/fd/proto/grpc/cashdesk/go/cashdeskpb
 
 service Cashdesk {
   rpc StreamWorkstationEvents(StreamWorkstationEventsRequest) returns (stream StreamWorkstationEventsResponse) {}
+  rpc SendEventResult(SendEventResultRequest) returns (SendEventResultResponse) {}
+}
+
+enum EVENT_TITLE{
+  PURCHASE       = 0;
+  REFUND         = 1;
+  CLOSE_SHIFT    = 2;
+  REPORT         = 3;
+  CASH_IN        = 4;
+  CASH_OUT       = 5;
+  CONTINUE_PRINT = 6;
+  CANCEL_CHECK   = 7;
 }
 
 message StreamWorkstationEventsRequest {
@@ -15,42 +27,33 @@ message StreamWorkstationEventsRequest {
 }
 
 message StreamWorkstationEventsResponse {
-  enum EVENT_TITLE{
-    PURCHASE       = 0;
-    REFUND         = 1;
-    CLOSE_SHIFT    = 2;
-    REPORT         = 3;
-    CASH_IN        = 4;
-    CASH_OUT       = 5;
-    CONTINUE_PRINT = 6;
-    CANCEL_CHECK   = 7;
-  }
+  EVENT_TITLE title = 1;
 
-  EVENT_TITLE event_title = 1;
+  string guid = 2;
 
-  optional Purchase purchase            = 2;
-  optional Refund refund                = 3;
-  optional CloseShift close_shift       = 4;
-  optional Report report                = 5;
-  optional CashIncome cash_in           = 6;
-  optional CashOutcome cash_outcome     = 7;
+  optional Purchase purchase            = 3;
+  optional Refund refund                = 4;
+  optional CloseShift close_shift       = 5;
+  optional Report report                = 6;
+  optional CashIncome cash_in           = 7;
+  optional CashOutcome cash_outcome     = 8;
 }
 
 message Purchase {
   string cashier_name                  = 1;
   string order                         = 2;
-  repeated PurchaseGood goods          = 3;
-  repeated PurchasePayment payments    = 4;
+  repeated Product goods               = 3;
+  repeated Payment payments            = 4;
   map<string,google.protobuf.Any> tags = 5;
 }
 
-message PurchasePayment {
+message Payment {
   string payment_type = 1;
   double amount       = 2;
   optional string rrn = 3;
 }
 
-message PurchaseGood {
+message Product {
   string name                          = 1;
   double quantity                      = 2;
   double price                         = 3;
@@ -62,19 +65,25 @@ message PurchaseGood {
 message Refund {
   string cashier_name                  = 1;
   string order                         = 2;
-  repeated PurchaseGood goods          = 3;
-  repeated PurchasePayment payments    = 4;
+  repeated Product goods               = 3;
+  repeated Payment payments            = 4;
   map<string,google.protobuf.Any> tags = 5;
 }
 
 message CloseShift {
+  enum DEVICE_TYPE {
+    POS           = 0;
+    POS_ALFA      = 1;
+    CASHDESK      = 2;
+  }
+
   string cashier_name         = 1;
-  optional string device_type = 2;
+  optional DEVICE_TYPE device_type = 2;
 }
 
 message Report {
   enum REPORT_TYPE {
-    X                  = 0;
+    X_REPORT           = 0;
     POS_INFO           = 1;
     POS_ALFA_INFO      = 2;
     POS_FULL_INFO      = 3;
@@ -95,3 +104,81 @@ message CashOutcome {
   string cashier_name = 1;
   double sum          = 2;
 }
+
+message SendEventResultRequest{
+  enum STATUS {
+    SUCCEEDED = 0;
+    FAILED    = 1;
+  }
+
+  string guid                                  = 1;
+  STATUS status                                = 2;
+  optional SendEventResultRequestResult result = 3;
+  optional SendEventResultRequestError error   = 4;
+}
+
+message SendEventResultRequestError{
+  string text = 1;
+}
+
+message SendEventResultRequestResult{
+  EVENT_TITLE title = 1;
+
+  optional PurchaseResult purchase            = 3;
+  optional RefundResult refund                = 4;
+  optional CloseShiftResult close_shift       = 5;
+}
+
+message PurchaseResult{
+  PaymentInfo payment                    = 1;
+  ReceiptInfo checks                     = 2;
+  uint64 fiscal_document_number          = 3;
+  string fiscal_serial_number            = 4;
+  string fiscal_sign                     = 5;
+  bool is_closed                         = 6;
+  bool is_printed                        = 7;
+  map<string,google.protobuf.Any> z_info = 8;
+}
+message RefundResult{
+  PaymentInfo payment                    = 1;
+  ReceiptInfo checks                     = 2;
+  uint64 fiscal_document_number          = 3;
+  string fiscal_serial_number            = 4;
+  string fiscal_sign                     = 5;
+  bool is_closed                         = 6;
+  bool is_printed                        = 7;
+  map<string,google.protobuf.Any> z_info = 8;
+}
+message CloseShiftResult{
+  string full_check_s                    = 1;
+  string full_check_a                    = 2;
+  uint64 fiscal_document_number          = 3;
+  string fiscal_serial_number            = 4;
+  string fiscal_sign                     = 5;
+  bool is_closed                         = 6;
+  bool is_printed                        = 7;
+  map<string,google.protobuf.Any> z_info = 8;
+}
+
+message ParsedCheck{
+  SlipCheck first           = 1;
+  optional SlipCheck second = 2;
+}
+
+message ReceiptInfo{
+  optional ParsedCheck parsed_check = 1;
+  optional string full_check        = 2;
+}
+
+message PaymentInfo{
+  double amount       = 1;
+  optional string rrn = 2;
+}
+
+message SlipCheck{
+  string first_part  = 1;
+  string second_part = 2;
+  string sum         = 3;
+}
+
+message SendEventResultResponse{}

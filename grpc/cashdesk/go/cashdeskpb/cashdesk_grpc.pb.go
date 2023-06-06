@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CashdeskClient interface {
 	StreamWorkstationEvents(ctx context.Context, in *StreamWorkstationEventsRequest, opts ...grpc.CallOption) (Cashdesk_StreamWorkstationEventsClient, error)
+	SendEventResult(ctx context.Context, in *SendEventResultRequest, opts ...grpc.CallOption) (*SendEventResultResponse, error)
 }
 
 type cashdeskClient struct {
@@ -65,11 +66,21 @@ func (x *cashdeskStreamWorkstationEventsClient) Recv() (*StreamWorkstationEvents
 	return m, nil
 }
 
+func (c *cashdeskClient) SendEventResult(ctx context.Context, in *SendEventResultRequest, opts ...grpc.CallOption) (*SendEventResultResponse, error) {
+	out := new(SendEventResultResponse)
+	err := c.cc.Invoke(ctx, "/net.vseinstrumenti.git.fd.proto.cashdesk.Cashdesk/SendEventResult", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CashdeskServer is the server API for Cashdesk service.
 // All implementations must embed UnimplementedCashdeskServer
 // for forward compatibility
 type CashdeskServer interface {
 	StreamWorkstationEvents(*StreamWorkstationEventsRequest, Cashdesk_StreamWorkstationEventsServer) error
+	SendEventResult(context.Context, *SendEventResultRequest) (*SendEventResultResponse, error)
 	mustEmbedUnimplementedCashdeskServer()
 }
 
@@ -79,6 +90,9 @@ type UnimplementedCashdeskServer struct {
 
 func (UnimplementedCashdeskServer) StreamWorkstationEvents(*StreamWorkstationEventsRequest, Cashdesk_StreamWorkstationEventsServer) error {
 	return status.Errorf(codes.Unimplemented, "method StreamWorkstationEvents not implemented")
+}
+func (UnimplementedCashdeskServer) SendEventResult(context.Context, *SendEventResultRequest) (*SendEventResultResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendEventResult not implemented")
 }
 func (UnimplementedCashdeskServer) mustEmbedUnimplementedCashdeskServer() {}
 
@@ -114,13 +128,36 @@ func (x *cashdeskStreamWorkstationEventsServer) Send(m *StreamWorkstationEventsR
 	return x.ServerStream.SendMsg(m)
 }
 
+func _Cashdesk_SendEventResult_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendEventResultRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CashdeskServer).SendEventResult(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/net.vseinstrumenti.git.fd.proto.cashdesk.Cashdesk/SendEventResult",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CashdeskServer).SendEventResult(ctx, req.(*SendEventResultRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Cashdesk_ServiceDesc is the grpc.ServiceDesc for Cashdesk service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Cashdesk_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "net.vseinstrumenti.git.fd.proto.cashdesk.Cashdesk",
 	HandlerType: (*CashdeskServer)(nil),
-	Methods:     []grpc.MethodDesc{},
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "SendEventResult",
+			Handler:    _Cashdesk_SendEventResult_Handler,
+		},
+	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "StreamWorkstationEvents",
