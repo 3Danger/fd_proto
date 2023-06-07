@@ -35,7 +35,7 @@ message StreamWorkstationEventsResponse {
   optional Refund refund                = 4;
   optional CloseShift close_shift       = 5;
   optional Report report                = 6;
-  optional CashIncome cash_in           = 7;
+  optional CashIncome cash_income       = 7;
   optional CashOutcome cash_outcome     = 8;
 }
 
