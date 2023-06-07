@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "google/protobuf/any.proto";
+import "google/protobuf/struct.proto";
 
 package net.vseinstrumenti.git.fd.proto.cashdesk;
 
@@ -44,7 +44,7 @@ message Purchase {
   string order                         = 2;
   repeated Product goods               = 3;
   repeated Payment payments            = 4;
-  map<string,google.protobuf.Any> tags = 5;
+  google.protobuf.Struct tags          = 5;
 }
 
 message Payment {
@@ -59,7 +59,7 @@ message Product {
   double price                         = 3;
   int32 department                     = 4;
   string tax_type                      = 5;
-  map<string,google.protobuf.Any> tags = 6;
+  google.protobuf.Struct tags          = 6;
 }
 
 message Refund {
@@ -67,7 +67,7 @@ message Refund {
   string order                         = 2;
   repeated Product goods               = 3;
   repeated Payment payments            = 4;
-  map<string,google.protobuf.Any> tags = 5;
+  google.protobuf.Struct tags          = 5;
 }
 
 message CloseShift {
@@ -137,7 +137,7 @@ message PurchaseResult{
   string fiscal_sign                     = 5;
   bool is_closed                         = 6;
   bool is_printed                        = 7;
-  map<string,google.protobuf.Any> z_info = 8;
+  google.protobuf.Struct z_info          = 8;
 }
 message RefundResult{
   PaymentInfo payment                    = 1;
@@ -147,7 +147,7 @@ message RefundResult{
   string fiscal_sign                     = 5;
   bool is_closed                         = 6;
   bool is_printed                        = 7;
-  map<string,google.protobuf.Any> z_info = 8;
+  google.protobuf.Struct z_info          = 8;
 }
 message CloseShiftResult{
   string full_check_s                    = 1;
@@ -157,7 +157,7 @@ message CloseShiftResult{
   string fiscal_sign                     = 5;
   bool is_closed                         = 6;
   bool is_printed                        = 7;
-  map<string,google.protobuf.Any> z_info = 8;
+  google.protobuf.Struct z_info          = 8;
 }
 
 message ParsedCheck{
