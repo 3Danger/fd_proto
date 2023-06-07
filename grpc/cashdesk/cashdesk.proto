@@ -138,6 +138,7 @@ message PurchaseResult{
   bool is_closed                         = 6;
   bool is_printed                        = 7;
   google.protobuf.Struct z_info          = 8;
+  google.protobuf.Struct mark            = 9;
 }
 message RefundResult{
   PaymentInfo payment                    = 1;
@@ -148,6 +149,7 @@ message RefundResult{
   bool is_closed                         = 6;
   bool is_printed                        = 7;
   google.protobuf.Struct z_info          = 8;
+  google.protobuf.Struct mark            = 9;
 }
 message CloseShiftResult{
   string full_check_s                    = 1;
