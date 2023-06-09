@@ -42,7 +42,7 @@ message StreamWorkstationEventsResponse {
 message Purchase {
   string cashier_name                  = 1;
   string order                         = 2;
-  repeated Product goods               = 3;
+  repeated Product products            = 3;
   repeated Payment payments            = 4;
   google.protobuf.Struct tags          = 5;
 }
@@ -65,7 +65,7 @@ message Product {
 message Refund {
   string cashier_name                  = 1;
   string order                         = 2;
-  repeated Product goods               = 3;
+  repeated Product products            = 3;
   repeated Payment payments            = 4;
   google.protobuf.Struct tags          = 5;
 }
