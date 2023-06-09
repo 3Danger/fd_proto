@@ -11,7 +11,7 @@ service Cashdesk {
   rpc SendEventResult(SendEventResultRequest) returns (SendEventResultResponse) {}
 }
 
-enum EVENT_TITLE{
+enum OPERATION_TYPE{
   PURCHASE       = 0;
   REFUND         = 1;
   CLOSE_SHIFT    = 2;
@@ -27,7 +27,7 @@ message StreamWorkstationEventsRequest {
 }
 
 message StreamWorkstationEventsResponse {
-  EVENT_TITLE title = 1;
+  OPERATION_TYPE operation_type = 1;
 
   string guid = 2;
 
@@ -122,7 +122,7 @@ message SendEventResultRequestError{
 }
 
 message SendEventResultRequestResult{
-  EVENT_TITLE title = 1;
+  OPERATION_TYPE operation_type = 1;
 
   optional PurchaseResult purchase            = 3;
   optional RefundResult refund                = 4;
