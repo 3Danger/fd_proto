@@ -48,17 +48,33 @@ message Purchase {
 }
 
 message Payment {
-  string payment_type = 1;
-  double amount       = 2;
-  optional string rrn = 3;
+  enum PAYMENT_TYPE{
+    CASHDESK = 0;
+    POS      = 1;
+    PREPAID  = 2;
+    POS_ALFA = 3;
+  }
+
+  PAYMENT_TYPE payment_type = 1;
+  double amount             = 2;
+  optional string rrn       = 3;
 }
 
 message Product {
+  enum TAX_TYPE{
+    VAT10  = 0;
+    VAT110 = 1;
+    VAT0   = 2;
+    VAT20  = 3;
+    VAT120 = 4;
+    NO     = 5;
+  }
+
   string name                          = 1;
   double quantity                      = 2;
   double price                         = 3;
   int32 department                     = 4;
-  string tax_type                      = 5;
+  TAX_TYPE tax_type                    = 5;
   google.protobuf.Struct tags          = 6;
 }
 
