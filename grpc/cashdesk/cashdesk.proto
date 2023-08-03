@@ -1,6 +1,8 @@
 syntax = "proto3";
 
 import "google/protobuf/struct.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto"; 
 
 package net.vseinstrumenti.git.fd.proto.cashdesk;
 
@@ -8,6 +10,7 @@ option go_package = "git.vseinstrumenti.net/fd/proto/grpc/cashdesk/go/cashdeskpb
 
 service Cashdesk {
   rpc StreamWorkstationEvents(StreamWorkstationEventsRequest) returns (stream StreamWorkstationEventsResponse) {}
+  rpc SendWorkstationLogs(SendWorkstationLogsRequest) returns (google.protobuf.Empty) {}
   rpc SendEventResult(SendEventResultRequest) returns (SendEventResultResponse) {}
 }
 
@@ -200,3 +203,23 @@ message SlipCheck{
 }
 
 message SendEventResultResponse{}
+
+message SendWorkstationLogsRequest{
+  string workstation_id = 1;
+  repeated LogItem items = 2;
+}
+
+message LogItem {
+  enum LogLevel {
+    ERROR   = 0;
+    WARN    = 1;
+    INFO    = 2;
+    DEBUG   = 3;
+  }
+  
+  google.protobuf.Timestamp ts = 1;
+  LogLevel level = 2;
+  string msg = 3;
+  google.protobuf.Struct data = 4;
+}
+
