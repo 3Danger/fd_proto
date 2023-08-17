@@ -225,6 +225,7 @@ message LogItem {
 }
 
 message SendEventAckRequest{
-  string event_guid = 1;
-  google.protobuf.Timestamp ts = 2;
+  string workstation_id = 1;
+  string event_guid = 2;
+  google.protobuf.Timestamp ts = 3;
 }
