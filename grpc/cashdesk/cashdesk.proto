@@ -12,6 +12,7 @@ service Cashdesk {
   rpc StreamWorkstationEvents(StreamWorkstationEventsRequest) returns (stream StreamWorkstationEventsResponse) {}
   rpc SendWorkstationLogs(SendWorkstationLogsRequest) returns (google.protobuf.Empty) {}
   rpc SendEventResult(SendEventResultRequest) returns (SendEventResultResponse) {}
+  rpc SendEventAck(SendEventAckRequest) returns (google.protobuf.Empty) {}
 }
 
 enum OPERATION_TYPE{
@@ -223,3 +224,7 @@ message LogItem {
   google.protobuf.Struct data = 4;
 }
 
+message SendEventAckRequest{
+  string event_guid = 1;
+  google.protobuf.Timestamp ts = 2;
+}
