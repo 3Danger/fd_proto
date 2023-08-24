@@ -9,6 +9,7 @@ package net.vseinstrumenti.git.fd.proto.cashdesk;
 option go_package = "git.vseinstrumenti.net/fd/proto/grpc/cashdesk/go/cashdeskpb";
 
 service Cashdesk {
+  rpc StreamEvents(stream StreamEventsAck) returns (stream StreamWorkstationEventsResponse) {}
   rpc StreamWorkstationEvents(StreamWorkstationEventsRequest) returns (stream StreamWorkstationEventsResponse) {}
   rpc SendWorkstationLogs(SendWorkstationLogsRequest) returns (google.protobuf.Empty) {}
   rpc SendEventResult(SendEventResultRequest) returns (SendEventResultResponse) {}
@@ -24,6 +25,11 @@ enum OPERATION_TYPE{
   CASH_OUT       = 5;
   CONTINUE_PRINT = 6;
   CANCEL_CHECK   = 7;
+}
+
+message StreamEventsAck {
+  string event_guid            = 1;
+  google.protobuf.Timestamp ts = 2;
 }
 
 message StreamWorkstationEventsRequest {
