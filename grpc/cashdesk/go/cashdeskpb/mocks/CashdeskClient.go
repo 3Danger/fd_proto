@@ -237,6 +237,75 @@ func (_c *CashdeskClient_SendWorkstationLogs_Call) RunAndReturn(run func(context
 	return _c
 }
 
+// StreamEvents provides a mock function with given fields: ctx, opts
+func (_m *CashdeskClient) StreamEvents(ctx context.Context, opts ...grpc.CallOption) (cashdeskpb.Cashdesk_StreamEventsClient, error) {
+	_va := make([]interface{}, len(opts))
+	for _i := range opts {
+		_va[_i] = opts[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 cashdeskpb.Cashdesk_StreamEventsClient
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, ...grpc.CallOption) (cashdeskpb.Cashdesk_StreamEventsClient, error)); ok {
+		return rf(ctx, opts...)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, ...grpc.CallOption) cashdeskpb.Cashdesk_StreamEventsClient); ok {
+		r0 = rf(ctx, opts...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(cashdeskpb.Cashdesk_StreamEventsClient)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, ...grpc.CallOption) error); ok {
+		r1 = rf(ctx, opts...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// CashdeskClient_StreamEvents_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'StreamEvents'
+type CashdeskClient_StreamEvents_Call struct {
+	*mock.Call
+}
+
+// StreamEvents is a helper method to define mock.On call
+//   - ctx context.Context
+//   - opts ...grpc.CallOption
+func (_e *CashdeskClient_Expecter) StreamEvents(ctx interface{}, opts ...interface{}) *CashdeskClient_StreamEvents_Call {
+	return &CashdeskClient_StreamEvents_Call{Call: _e.mock.On("StreamEvents",
+		append([]interface{}{ctx}, opts...)...)}
+}
+
+func (_c *CashdeskClient_StreamEvents_Call) Run(run func(ctx context.Context, opts ...grpc.CallOption)) *CashdeskClient_StreamEvents_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		variadicArgs := make([]grpc.CallOption, len(args)-1)
+		for i, a := range args[1:] {
+			if a != nil {
+				variadicArgs[i] = a.(grpc.CallOption)
+			}
+		}
+		run(args[0].(context.Context), variadicArgs...)
+	})
+	return _c
+}
+
+func (_c *CashdeskClient_StreamEvents_Call) Return(_a0 cashdeskpb.Cashdesk_StreamEventsClient, _a1 error) *CashdeskClient_StreamEvents_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *CashdeskClient_StreamEvents_Call) RunAndReturn(run func(context.Context, ...grpc.CallOption) (cashdeskpb.Cashdesk_StreamEventsClient, error)) *CashdeskClient_StreamEvents_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // StreamWorkstationEvents provides a mock function with given fields: ctx, in, opts
 func (_m *CashdeskClient) StreamWorkstationEvents(ctx context.Context, in *cashdeskpb.StreamWorkstationEventsRequest, opts ...grpc.CallOption) (cashdeskpb.Cashdesk_StreamWorkstationEventsClient, error) {
 	_va := make([]interface{}, len(opts))
