@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	metadataWorkstationID = "workstation_id"
+	metadataWorkstationID = "workstation-id"
 )
 
 func GetWorkstationID(ctx context.Context) (string, bool) {
