@@ -10,10 +10,8 @@ option go_package = "git.vseinstrumenti.net/fd/proto/grpc/cashdesk/go/cashdeskpb
 
 service Cashdesk {
   rpc StreamEvents(stream StreamEventsAck) returns (stream StreamWorkstationEventsResponse) {}
-  rpc StreamWorkstationEvents(StreamWorkstationEventsRequest) returns (stream StreamWorkstationEventsResponse) {}
   rpc SendWorkstationLogs(SendWorkstationLogsRequest) returns (google.protobuf.Empty) {}
   rpc SendEventResult(SendEventResultRequest) returns (SendEventResultResponse) {}
-  rpc SendEventAck(SendEventAckRequest) returns (google.protobuf.Empty) {}
 }
 
 enum OPERATION_TYPE{
@@ -30,10 +28,6 @@ enum OPERATION_TYPE{
 message StreamEventsAck {
   string event_guid            = 1;
   google.protobuf.Timestamp ts = 2;
-}
-
-message StreamWorkstationEventsRequest {
-  string workstation_id = 1;
 }
 
 message StreamWorkstationEventsResponse {
@@ -212,7 +206,6 @@ message SlipCheck{
 message SendEventResultResponse{}
 
 message SendWorkstationLogsRequest{
-  string workstation_id = 1;
   repeated LogItem items = 2;
 }
 
@@ -228,10 +221,4 @@ message LogItem {
   LogLevel level = 2;
   string msg = 3;
   google.protobuf.Struct data = 4;
-}
-
-message SendEventAckRequest{
-  string workstation_id = 1;
-  string event_guid = 2;
-  google.protobuf.Timestamp ts = 3;
 }
