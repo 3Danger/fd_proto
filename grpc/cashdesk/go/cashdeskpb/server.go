@@ -7,7 +7,12 @@ import (
 )
 
 func UnaryServerMetadata() grpc.UnaryServerInterceptor {
-	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+	return func(
+		ctx context.Context,
+		req interface{},
+		info *grpc.UnaryServerInfo,
+		handler grpc.UnaryHandler,
+	) (interface{}, error) {
 		if err := checkMetadata(ctx); err != nil {
 			return nil, err
 		}
