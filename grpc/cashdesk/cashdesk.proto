@@ -62,6 +62,7 @@ message Payment {
   PAYMENT_TYPE payment_type = 1;
   double amount             = 2;
   optional string rrn       = 3;
+  optional bool skip_pos    = 4;
 }
 
 message Product {
