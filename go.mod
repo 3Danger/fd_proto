@@ -1,4 +1,5 @@
-module git.vseinstrumenti.net/fd/proto
+//module git.vseinstrumenti.net/fd/proto
+module github.com/3Danger/fd_proto
 
 go 1.20
 
