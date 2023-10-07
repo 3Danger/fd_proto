@@ -1,3 +1,4 @@
+
 module github.com/3Danger/fd_proto
 
 go 1.21.1
